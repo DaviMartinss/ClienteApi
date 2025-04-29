@@ -1,7 +1,7 @@
-using ClienteApi.ExecuteTRA;
-using ClienteApi.Consumer;
+using ClienteApi.Consumer.ClienteApi.Consumer.Transaction;
+using ClienteApi.SendClientRegisteredEmail.Transaction;
 
-namespace ClienteApi
+namespace ClienteApi.SendClientRegisteredEmail.Worker
 {
     public class Program
     {
@@ -15,11 +15,11 @@ namespace ClienteApi
                 .ConfigureServices((hostContext, services) =>
                 {
                     // Configuração do RabbitMQ
-                    services.AddSingleton<ClienteApiConsumer>();
+                    services.AddSingleton<SendClientRegisteredEmailTRA>();
 
                     // Configuração do Worker
-                    services.AddSingleton<ClienteApi.ExecuteTRA.ExecuteTRA>();
-                    services.AddHostedService<ClienteApi.Worker.Worker>();
+                    services.AddSingleton<ExecuteTRA>();
+                    services.AddHostedService<Worker>();
 
                     // Configuração de logs
                     services.AddLogging(builder => builder.AddConsole());

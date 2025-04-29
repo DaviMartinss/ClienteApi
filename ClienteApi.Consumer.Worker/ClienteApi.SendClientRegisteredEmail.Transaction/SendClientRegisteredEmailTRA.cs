@@ -1,22 +1,22 @@
 ﻿using RabbitMQ.Client;
 
-namespace ClienteApi.Consumer
+namespace ClienteApi.Consumer.ClienteApi.Consumer.Transaction
 {
-    public class ClienteApiConsumer
+    public class SendClientRegisteredEmailTRA
     {
         private readonly IConfiguration _configuration;
         private readonly IConnection _connection;
         private readonly IChannel _channel;
 
-        public ClienteApiConsumer(IConfiguration configuration)
+        public SendClientRegisteredEmailTRA(IConfiguration configuration)
         {
             _configuration = configuration;
 
             var factory = new ConnectionFactory
             {
-                HostName = _configuration["RabbitMQ:HostName"] ?? "localhost",
-                UserName = _configuration["RabbitMQ:UserName"] ?? "guest",
-                Password = _configuration["RabbitMQ:Password"] ?? "guest"
+                HostName = _configuration.GetValue<string>("RabbitMQ:HostName"),
+                UserName = _configuration.GetValue<string>("RabbitMQ:UserName"),
+                Password = _configuration.GetValue<string>("RabbitMQ:Password")
             };
 
             _connection = factory.CreateConnectionAsync().GetAwaiter().GetResult();

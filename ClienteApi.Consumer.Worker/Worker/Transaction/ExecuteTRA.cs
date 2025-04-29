@@ -1,16 +1,17 @@
-﻿using ClienteApi.Consumer;
+﻿using ClienteApi.Consumer.ClienteApi.Consumer.Transaction;
+using ClienteApi.Consumer.ClienteApi.Consumer.Util;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 
-namespace ClienteApi.ExecuteTRA
+namespace ClienteApi.SendClientRegisteredEmail.Transaction
 {
     public class ExecuteTRA
     {
-        private readonly ClienteApiConsumer _clienteApiConsumer;
+        private readonly SendClientRegisteredEmailTRA _clienteApiConsumer;
         private readonly ILogger<ExecuteTRA> _logger;
 
-        public ExecuteTRA(ClienteApiConsumer clienteApiConsumer, ILogger<ExecuteTRA> logger)
+        public ExecuteTRA(SendClientRegisteredEmailTRA clienteApiConsumer, ILogger<ExecuteTRA> logger)
         {
             _clienteApiConsumer = clienteApiConsumer;
             _logger = logger;
@@ -23,7 +24,7 @@ namespace ClienteApi.ExecuteTRA
                 var channel = _clienteApiConsumer.GetChannel();
 
                 await channel.QueueDeclareAsync(
-                    queue: RabbitMQConfig.QueueName,
+                    queue: SendClientRegisteredEmailConfig.QueueName,
                     durable: true,
                     exclusive: false,
                     autoDelete: false,
@@ -43,12 +44,12 @@ namespace ClienteApi.ExecuteTRA
                 };
 
                 await channel.BasicConsumeAsync(
-                    queue: RabbitMQConfig.QueueName,
+                    queue: SendClientRegisteredEmailConfig.QueueName,
                     autoAck: true,
                     consumer: consumer
                 );
 
-                _logger.LogInformation("RabbitMQ Consumer rodando... (pressione Ctrl+C para sair)");
+                _logger.LogInformation("RabbitMQ Consumer rodando...");
                 Console.ReadLine();
             }
             catch (Exception ex)

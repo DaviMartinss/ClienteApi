@@ -1,11 +1,13 @@
-namespace ClienteApi.Worker
+using ClienteApi.SendClientRegisteredEmail.Transaction;
+
+namespace ClienteApi.SendClientRegisteredEmail.Worker
 {
     public class Worker : BackgroundService
     {
-        private readonly ClienteApi.ExecuteTRA.ExecuteTRA _executeTRA;
+        private readonly ExecuteTRA _executeTRA;
         private readonly ILogger<Worker> _logger;
 
-        public Worker(ClienteApi.ExecuteTRA.ExecuteTRA executeTRA, ILogger<Worker> logger)
+        public Worker(ExecuteTRA executeTRA, ILogger<Worker> logger)
         {
             _executeTRA = executeTRA;
             _logger = logger;
