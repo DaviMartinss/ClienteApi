@@ -12,11 +12,13 @@ namespace ClienteApi.Controllers
     {
         private readonly ClienteRepository _repository;
         private readonly ViaCepService _viaCepService;
+        private readonly RabbitMQProducer _producer;
 
-        public ClienteController(ClienteRepository repository, ViaCepService viaCepService)
+        public ClienteController(ClienteRepository repository, ViaCepService viaCepService ,RabbitMQProducer rabbitMQProducer)
         {
             _repository = repository;
             _viaCepService = viaCepService;
+            _producer = rabbitMQProducer;
         }
 
         [HttpPost]
@@ -40,6 +42,8 @@ namespace ClienteApi.Controllers
                 cliente.Estado = endereco.Uf;
 
                 var id = await _repository.CreateAsync(cliente);
+
+                _producer.SendMessage(cliente);
 
                 return CreatedAtAction(nameof(GetClienteById), new { id = id }, cliente);
             }

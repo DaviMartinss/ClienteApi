@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddScoped<ClienteRepository>();
 builder.Services.AddHttpClient<ViaCepService>();
+builder.Services.AddSingleton<RabbitMQProducer>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
