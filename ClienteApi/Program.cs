@@ -1,10 +1,15 @@
-using ClienteApi.Data;
+using ClienteApi.Data.Contexts;
+using ClienteApi.Data.Repositories;
 using ClienteApi.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Configurar a conexão com o banco
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL")));
 
+// Adicionar serviços existentes
 builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddScoped<ClienteRepository>();
 builder.Services.AddHttpClient<ViaCepService>();
@@ -16,7 +21,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configurar pipeline de requisição
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -24,9 +29,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

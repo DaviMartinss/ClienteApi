@@ -1,7 +1,8 @@
-﻿using ClienteApi.Models;
+﻿using ClienteApi.Data.Contexts;
+using ClienteApi.Models;
 using Dapper;
 
-namespace ClienteApi.Data
+namespace ClienteApi.Data.Repositories
 {
     public class ClienteRepository
     {

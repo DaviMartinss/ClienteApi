@@ -1,4 +1,4 @@
-﻿using ClienteApi.Data;
+﻿using ClienteApi.Data.Repositories;
 using ClienteApi.Models;
 using ClienteApi.Services;
 using Microsoft.AspNetCore.Mvc;

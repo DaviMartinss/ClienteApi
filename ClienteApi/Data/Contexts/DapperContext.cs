@@ -1,7 +1,7 @@
 ﻿using Npgsql;
 using System.Data;
 
-namespace ClienteApi.Data
+namespace ClienteApi.Data.Contexts
 {
     public class DapperContext
     {
