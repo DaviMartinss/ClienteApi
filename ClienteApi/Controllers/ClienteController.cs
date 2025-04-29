@@ -1,13 +1,13 @@
 ﻿using ClienteApi.Data.Repositories;
 using ClienteApi.Enums;
 using ClienteApi.Models;
+using ClienteApi.Models.Responses;
 using ClienteApi.Services;
 using ClienteApi.Util.Languages;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClienteApi.Controllers
 {
-
     [ApiController]
     [Route("api/clientes")]
     public class ClienteController : ControllerBase
@@ -16,7 +16,7 @@ namespace ClienteApi.Controllers
         private readonly ViaCepService _viaCepService;
         private readonly RabbitMQProducer _producer;
 
-        public ClienteController(ClienteRepository repository, ViaCepService viaCepService ,RabbitMQProducer rabbitMQProducer)
+        public ClienteController(ClienteRepository repository, ViaCepService viaCepService, RabbitMQProducer rabbitMQProducer)
         {
             _repository = repository;
             _viaCepService = viaCepService;
@@ -31,12 +31,22 @@ namespace ClienteApi.Controllers
                 // Verifica email duplicado
                 var existing = await _repository.GetByEmailAsync(cliente.Email);
                 if (existing != null)
-                    return BadRequest(new { message = ClienteMsg.EX0001 });
+                    return BadRequest(new ApiErrorResponse
+                    {
+                        ErrorCode = ApiErrorCode.EmailAlreadyRegistered,
+                        Message = ClienteMsg.EX0001
+                    });
 
                 // Consulta o ViaCEP
                 var (success, endereco) = await _viaCepService.GetEnderecoAsync(cliente.Cep);
                 if (!success)
-                    return BadRequest(new { message = ClienteMsg.EX0002 });
+                {
+                    return BadRequest(new ApiErrorResponse
+                    {
+                        ErrorCode = ApiErrorCode.CepNotFound,
+                        Message = ClienteMsg.EX0002
+                    });
+                }
 
                 cliente.Logradouro = endereco!.Logradouro;
                 cliente.Bairro = endereco.Bairro;
@@ -51,7 +61,11 @@ namespace ClienteApi.Controllers
             }
             catch (Exception)
             {
-                return StatusCode((int)ApiErrorCode.InternalServer, new { message = ClienteApiResponseMsg.EX0001 });
+                return StatusCode(500, new ApiErrorResponse
+                {
+                    ErrorCode = ApiErrorCode.InternalServer,
+                    Message = ClienteApiResponseMsg.EX0001
+                });
             }
         }
 
@@ -77,7 +91,13 @@ namespace ClienteApi.Controllers
                 // Consulta o ViaCEP
                 var (success, endereco) = await _viaCepService.GetEnderecoAsync(cliente.Cep);
                 if (!success)
-                    return BadRequest(new { message = ClienteMsg.EX0002 });
+                {
+                    return BadRequest(new ApiErrorResponse
+                    {
+                        ErrorCode = ApiErrorCode.CepNotFound,
+                        Message = ClienteMsg.EX0002
+                    });
+                }
 
                 cliente.Id = id;
                 cliente.Logradouro = endereco!.Logradouro;
@@ -91,7 +111,11 @@ namespace ClienteApi.Controllers
             }
             catch (Exception)
             {
-                return StatusCode((int)ApiErrorCode.InternalServer, new { message = ClienteApiResponseMsg.EX0001 });
+                return StatusCode(500, new ApiErrorResponse
+                {
+                    ErrorCode = ApiErrorCode.InternalServer,
+                    Message = ClienteApiResponseMsg.EX0001
+                });
             }
         }
     }

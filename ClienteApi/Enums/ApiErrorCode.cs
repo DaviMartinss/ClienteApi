@@ -2,8 +2,8 @@
 {
     public enum ApiErrorCode
     {
-        BadRequest = 400,
-        InternalServer = 500
+        EmailAlreadyRegistered = 4001,
+        CepNotFound = 4002,
+        InternalServer = 5000
     }
-
 }
