@@ -1,4 +1,4 @@
-﻿namespace ClienteApi.Configurations
+﻿namespace ClienteApi.Configurations.Infrastructure.Messaging
 {
     public class RabbitMQConfiguracao
     {

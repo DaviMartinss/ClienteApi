@@ -1,6 +1,8 @@
 ﻿using ClienteApi.Data.Repositories;
+using ClienteApi.Enums;
 using ClienteApi.Models;
 using ClienteApi.Services;
+using ClienteApi.Util.Languages;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClienteApi.Controllers
@@ -29,12 +31,12 @@ namespace ClienteApi.Controllers
                 // Verifica email duplicado
                 var existing = await _repository.GetByEmailAsync(cliente.Email);
                 if (existing != null)
-                    return BadRequest(new { message = "Email já cadastrado." });
+                    return BadRequest(new { message = ClienteMsg.EX0001 });
 
                 // Consulta o ViaCEP
                 var (success, endereco) = await _viaCepService.GetEnderecoAsync(cliente.Cep);
                 if (!success)
-                    return BadRequest(new { message = "CEP inválido." });
+                    return BadRequest(new { message = ClienteMsg.EX0002 });
 
                 cliente.Logradouro = endereco!.Logradouro;
                 cliente.Bairro = endereco.Bairro;
@@ -49,7 +51,7 @@ namespace ClienteApi.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(500, new { message = "Ocorreu um erro. Tente novamente mais tarde." });
+                return StatusCode((int)ApiErrorCode.InternalServer, new { message = ClienteApiResponseMsg.EX0001 });
             }
         }
 
@@ -75,7 +77,7 @@ namespace ClienteApi.Controllers
                 // Consulta o ViaCEP
                 var (success, endereco) = await _viaCepService.GetEnderecoAsync(cliente.Cep);
                 if (!success)
-                    return BadRequest(new { message = "CEP inválido." });
+                    return BadRequest(new { message = ClienteMsg.EX0002 });
 
                 cliente.Id = id;
                 cliente.Logradouro = endereco!.Logradouro;
@@ -89,7 +91,7 @@ namespace ClienteApi.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(500, new { message = "Ocorreu um erro. Tente novamente mais tarde." });
+                return StatusCode((int)ApiErrorCode.InternalServer, new { message = ClienteApiResponseMsg.EX0001 });
             }
         }
     }

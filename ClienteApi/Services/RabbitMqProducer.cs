@@ -1,5 +1,5 @@
-﻿using ClienteApi.Configurations;
-using ClienteApi.Interfaces;
+﻿using ClienteApi.Configurations.Infrastructure.Messaging;
+using ClienteApi.Configurations.Infrastructure.Messaging.Interfaces;
 using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
