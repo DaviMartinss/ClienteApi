@@ -177,3 +177,46 @@ Por fim, vamos executar o **worker `ClienteApi.SendClientRegisteredEmail`** para
 Simulando envio
 ![simulando envio](https://github.com/user-attachments/assets/00a3b4bf-ee64-491c-a51a-85b84e00f07f)
 
+## Testes Unitários
+
+O projeto inclui testes unitários para garantir a integridade das operações do **ClienteController**. Os testes foram implementados utilizando **XUnit** e **Moq**, permitindo a simulação de comportamentos e validação das respostas da API.
+
+### Tecnologias utilizadas nos testes:
+- **XUnit** para estrutura de testes
+- **Moq** para criar mocks de dependências
+- **AspNetCore.Mvc** para validar os retornos da API
+
+### Casos de Teste Implementados:
+
+#### 1. Cadastro de Cliente
+- **CreateCliente_EmailDuplicado_DeveRetornarBadRequest:**  
+  - Testa a tentativa de cadastrar um cliente com um email já existente.
+  - Esperado: **HTTP 400 - Bad Request** com a mensagem de erro apropriada.
+
+- **CreateCliente_Valido_DeveRetornarCreated:**  
+  - Testa o cadastro de um cliente válido.
+  - Esperado: **HTTP 201 - Created** com os detalhes do cliente cadastrado.
+
+#### 2. Consulta de Cliente por ID
+- **GetClienteById_ClienteExiste_DeveRetornarOkComCliente:**  
+  - Testa a consulta de um cliente existente pelo ID.
+  - Esperado: **HTTP 200 - OK**, retornando os dados do cliente.
+
+- **GetClienteById_ClienteNaoExiste_DeveRetornarNotFound:**  
+  - Testa a consulta de um cliente inexistente pelo ID.
+  - Esperado: **HTTP 404 - Not Found** com a mensagem de erro apropriada.
+
+#### 3. Atualização de Cliente
+- **UpdateCliente_ClienteNaoExiste_DeveRetornarNotFound:**  
+  - Testa a tentativa de atualização de um cliente inexistente.
+  - Esperado: **HTTP 404 - Not Found** com a mensagem de erro apropriada.
+
+- **UpdateCliente_Valido_DeveRetornarOkComCliente:**  
+  - Testa a atualização de um cliente válido.
+  - Esperado: **HTTP 200 - OK**, retornando os dados atualizados.
+
+---
+
+Esses testes garantem que a API lida corretamente com diferentes cenários, desde erros de validação até operações bem-sucedidas. 🚀
+
+
