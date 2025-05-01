@@ -1,12 +1,11 @@
 ﻿using ClienteApi.Configurations.Infrastructure.Messaging;
-using ClienteApi.Configurations.Infrastructure.Messaging.Interfaces;
 using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
 
 namespace ClienteApi.Services
 {
-    public class RabbitMQProducer : IRabbitMQProducer
+    public class RabbitMQProducer : ClienteApi.Services.Interfaces.IRabbitMQProducer
     {
         private readonly IConfiguration _configuration;
         private readonly ConnectionFactory _factory;
@@ -23,6 +22,7 @@ namespace ClienteApi.Services
                 Password = _configuration["RabbitMQ:Password"] ?? "guest"
             };
 
+            // Criando a conexão com o RabbitMQ
             _connection = _factory.CreateConnectionAsync().GetAwaiter().GetResult();
             _channel = _connection.CreateChannelAsync().GetAwaiter().GetResult();
         }
@@ -44,16 +44,16 @@ namespace ClienteApi.Services
         public async ValueTask SendMessageAsync<TProperties>(string exchange, string routingKey,
     bool mandatory, TProperties basicProperties, ReadOnlyMemory<byte> body,
     CancellationToken cancellationToken = default)
-    where TProperties : IReadOnlyBasicProperties, IAmqpHeader
+        where TProperties : IReadOnlyBasicProperties, IAmqpHeader
         {
             try
             {
                 await _channel.ExchangeDeclareAsync(
-                exchange: RabbitMQConfiguracao.ExchangeName,
-                type: ExchangeType.Direct,
-                durable: false,
-                autoDelete: false
-            );
+                    exchange: RabbitMQConfiguracao.ExchangeName,
+                    type: ExchangeType.Direct,
+                    durable: false,
+                    autoDelete: false
+                );
 
                 await _channel.QueueDeclareAsync(
                     queue: RabbitMQConfiguracao.QueueName,
@@ -77,6 +77,5 @@ namespace ClienteApi.Services
                 throw;
             }
         }
-
     }
 }

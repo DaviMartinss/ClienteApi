@@ -1,6 +1,8 @@
-﻿namespace ClienteApi.Services
+﻿using ClienteApi.Services.Interfaces;
+
+namespace ClienteApi.Services
 {
-    public class ViaCepService
+    public class ViaCepService : IViaCepService
     {
         private readonly HttpClient _httpClient;
 
@@ -9,7 +11,7 @@
             _httpClient = httpClient;
         }
 
-        public async Task<(bool success, ViaCepResponse? data)> GetEnderecoAsync(string cep)
+        public async Task<(bool Success, ViaCepResponse? Data)> GetEnderecoAsync(string cep)
         {
             try
             {
@@ -24,6 +26,7 @@
                 return (false, null);
             }
         }
+
 
         public class ViaCepResponse
         {

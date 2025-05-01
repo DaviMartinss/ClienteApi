@@ -1,8 +1,10 @@
 ﻿using ClienteApi.Data.Repositories;
+using ClienteApi.Data.Repositories.Interfaces;
 using ClienteApi.Enums;
 using ClienteApi.Models;
 using ClienteApi.Models.Responses;
 using ClienteApi.Services;
+using ClienteApi.Services.Interfaces;
 using ClienteApi.Util.Languages;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,15 +14,15 @@ namespace ClienteApi.Controllers
     [Route("api/clientes")]
     public class ClienteController : ControllerBase
     {
-        private readonly ClienteRepository _repository;
-        private readonly ViaCepService _viaCepService;
-        private readonly RabbitMQProducer _producer;
+        private readonly IClienteRepository _repository;
+        private readonly IViaCepService _viaCepService;
+        private readonly IRabbitMQProducer _producer;
 
-        public ClienteController(ClienteRepository repository, ViaCepService viaCepService, RabbitMQProducer rabbitMQProducer)
+        public ClienteController(IClienteRepository repository, IViaCepService viaCepService, IRabbitMQProducer producer)
         {
             _repository = repository;
             _viaCepService = viaCepService;
-            _producer = rabbitMQProducer;
+            _producer = producer;
         }
 
         [HttpPost]
@@ -107,7 +109,7 @@ namespace ClienteApi.Controllers
 
                 await _repository.UpdateAsync(cliente);
 
-                return NoContent();
+                return Ok(cliente);
             }
             catch (Exception)
             {

@@ -1,14 +1,15 @@
-﻿using ClienteApi.Data.Contexts;
+﻿using ClienteApi.Data.Contexts.Interfaces;
+using ClienteApi.Data.Repositories.Interfaces;
 using ClienteApi.Models;
 using Dapper;
 
 namespace ClienteApi.Data.Repositories
 {
-    public class ClienteRepository
+    public class ClienteRepository : IClienteRepository
     {
-        private readonly DapperContext _context;
+        private readonly IDapperContext _context;
 
-        public ClienteRepository(DapperContext context)
+        public ClienteRepository(IDapperContext context)
         {
             _context = context;
         }
@@ -22,9 +23,16 @@ namespace ClienteApi.Data.Repositories
 
         public async Task<Cliente?> GetByEmailAsync(string email)
         {
-            var query = "SELECT * FROM clientes WHERE email = @Email";
-            using var connection = _context.CreateConnection();
-            return await connection.QueryFirstOrDefaultAsync<Cliente>(query, new { Email = email });
+            try
+            {
+                var query = "SELECT * FROM Clientes WHERE email = @Email";
+                using var connection = _context.CreateConnection();
+                return await connection.QueryFirstOrDefaultAsync<Cliente>(query, new { Email = email });
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public async Task<int> CreateAsync(Cliente cliente)

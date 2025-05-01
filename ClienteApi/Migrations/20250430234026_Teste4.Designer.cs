@@ -2,6 +2,7 @@
 using ClienteApi.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClienteApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250430234026_Teste4")]
+    partial class Teste4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,50 +28,41 @@ namespace ClienteApi.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
+                        .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Bairro")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("bairro");
+                        .HasColumnType("text");
 
                     b.Property<string>("Cep")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("cep");
+                        .HasColumnType("text");
 
                     b.Property<string>("Cidade")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("cidade");
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("email");
+                        .HasColumnType("text");
 
                     b.Property<string>("Estado")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("estado");
+                        .HasColumnType("text");
 
                     b.Property<string>("Logradouro")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("logradouro");
+                        .HasColumnType("text");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("nome");
+                        .HasColumnType("text");
 
-                    b.HasKey("Id")
-                        .HasName("pk_clientes");
+                    b.HasKey("Id");
 
-                    b.ToTable("clientes", (string)null);
+                    b.ToTable("cliente", (string)null);
                 });
 #pragma warning restore 612, 618
         }
