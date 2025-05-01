@@ -108,11 +108,55 @@ Após a requisição, a API retorna uma resposta de **sucesso**, indicando que o
 
 - Uma **mensagem foi publicada no RabbitMQ**, notificando o evento de cadastro.
 
-![Total do MQ](![total do MQ](https://github.com/user-attachments/assets/445dc0ac-2e1b-487e-82dd-19db4557d8da)
+![Total do MQ](https://github.com/user-attachments/assets/445dc0ac-2e1b-487e-82dd-19db4557d8da)
 
-![Dado no RabbitMQ](![dado no RabbitMQ](https://github.com/user-attachments/assets/38831087-d409-4724-a485-b02d22bc1746)
+![Dado no RabbitMQ](https://github.com/user-attachments/assets/38831087-d409-4724-a485-b02d22bc1746)
+
+## 2º Caso - Listar Cliente
+
+Para buscar um cliente cadastrado no banco de dados, basta realizar uma requisição **GET**, informando o **Id** do cliente.
+
+### Exemplo de Requisição
+
+- **Método:** GET
+- **Endpoint:** `/clientes/{id}`
+
+![exemplo de get](https://github.com/user-attachments/assets/f1dfcc19-4cd0-4c3b-819c-4917bfe81a84)
+
+### Retorno da API
+
+Se o cliente existir, a API retornará os dados cadastrados.
+
+![Retorno de Busca](https://github.com/user-attachments/assets/cea70c91-024d-46aa-aec3-f42e8be628b5)
 
 
+Caso o **Id** informado não exista, será retornado um erro **404 - Not Found**.
+![erro no get](https://github.com/user-attachments/assets/75601af2-b129-468c-94cf-06c73e4f8041)
 
+
+## 3º Caso - Atualizar Cliente
+
+Agora vamos realizar a **atualização** do nome e email do cliente.
+
+### Informações que podem ser editadas:
+
+- **Nome**
+- **Email** (único no banco)
+- **Dados relacionados ao CEP** *(para isso, basta inserir um novo CEP)*
+
+### Exemplo de Requisição
+
+- **Método:** PUT
+- **Endpoint:** `/clientes/{id}`
+
+### Retorno da API
+
+Se a atualização for bem-sucedida, a API retornará os **dados atualizados do cliente**, confirmando que a alteração foi aplicada.
+
+### Dados Atualizados no Banco
+![retorno update](https://github.com/user-attachments/assets/cb4993ff-4236-42ca-a0ac-788b90625904)
+
+Após a atualização, os **dados do cliente foram modificados no banco de dados**, garantindo que as novas informações foram persistidas corretamente.
+![dado no banco update](https://github.com/user-attachments/assets/9e5a26ac-2e0b-4c7d-9840-ff13ac0f8d42)
 
 
