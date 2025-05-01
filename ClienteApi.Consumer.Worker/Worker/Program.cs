@@ -14,10 +14,14 @@ namespace ClienteApi.SendClientRegisteredEmail.Worker
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    // Configuração do RabbitMQ
-                    services.AddSingleton<SendClientRegisteredEmailTRA>();
+                    // Registro de SendClientRegisteredEmailTRA com injeção segura de IConfiguration
+                    services.AddSingleton<SendClientRegisteredEmailTRA>(sp =>
+                    {
+                        var configuration = sp.GetRequiredService<IConfiguration>();
+                        return new SendClientRegisteredEmailTRA(configuration);
+                    });
 
-                    // Configuração do Worker
+                    // Registro do Worker e sua lógica
                     services.AddSingleton<ExecuteTRA>();
                     services.AddHostedService<Worker>();
 

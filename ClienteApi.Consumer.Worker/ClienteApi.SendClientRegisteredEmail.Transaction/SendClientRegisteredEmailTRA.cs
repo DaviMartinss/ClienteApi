@@ -10,17 +10,25 @@ namespace ClienteApi.Consumer.ClienteApi.Consumer.Transaction
 
         public SendClientRegisteredEmailTRA(IConfiguration configuration)
         {
-            _configuration = configuration;
-
-            var factory = new ConnectionFactory
+            try
             {
-                HostName = _configuration.GetValue<string>("RabbitMQ:HostName"),
-                UserName = _configuration.GetValue<string>("RabbitMQ:UserName"),
-                Password = _configuration.GetValue<string>("RabbitMQ:Password")
-            };
+                _configuration = configuration;
 
-            _connection = factory.CreateConnectionAsync().GetAwaiter().GetResult();
-            _channel = _connection.CreateChannelAsync().GetAwaiter().GetResult();
+                var factory = new ConnectionFactory
+                {
+                    HostName = _configuration.GetValue<string>("RabbitMQ:HostName") ?? "localhost",
+                    UserName = _configuration.GetValue<string>("RabbitMQ:UserName") ?? "guest",
+                    Password = _configuration.GetValue<string>("RabbitMQ:Password") ?? "guest"
+                };
+
+                _connection = factory.CreateConnectionAsync().GetAwaiter().GetResult();
+                _channel = _connection.CreateChannelAsync().GetAwaiter().GetResult();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            
         }
 
         public IChannel GetChannel() => _channel;
