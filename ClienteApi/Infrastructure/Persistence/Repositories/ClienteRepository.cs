@@ -1,5 +1,6 @@
 ﻿using ClienteApi.Core.Domain.Entities;
 using ClienteApi.Core.Domain.Interfaces;
+using ClienteApi.Infrastructure.Persistence.Interfaces;
 using Dapper;
 
 namespace ClienteApi.Infrastructure.Persistence.Repositories

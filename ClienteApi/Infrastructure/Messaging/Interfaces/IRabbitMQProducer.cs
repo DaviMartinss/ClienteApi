@@ -1,4 +1,4 @@
-﻿namespace ClienteApi.Application.Interfaces
+﻿namespace ClienteApi.Infrastructure.Messaging.Interfaces
 {
     public interface IRabbitMQProducer
     {

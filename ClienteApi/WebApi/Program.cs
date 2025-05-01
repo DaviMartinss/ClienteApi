@@ -4,8 +4,11 @@ using ClienteApi.Application.Interfaces;
 using ClienteApi.Application.UseCases;
 using ClienteApi.Infrastructure.Persistence.Repositories;
 using ClienteApi.Infrastructure.Persistence.Contexts;
-using ClienteApi.Infrastructure.ExternalServices.ViaCepService;
 using ClienteApi.Infrastructure.Messaging;
+using ClienteApi.Infrastructure.Messaging.Interfaces;
+using ClienteApi.Infrastructure.ExternalServices.ViaCepService.Implementations;
+using ClienteApi.Infrastructure.ExternalServices.ViaCepService.Interfaces;
+using ClienteApi.Infrastructure.Persistence.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

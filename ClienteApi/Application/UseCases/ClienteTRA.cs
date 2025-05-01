@@ -5,6 +5,8 @@ using ClienteApi.Core.Domain.Entities;
 using ClienteApi.Core.Domain.Enums;
 using ClienteApi.Core.Domain.Interfaces;
 using ClienteApi.Core.Util.Languages;
+using ClienteApi.Infrastructure.ExternalServices.ViaCepService.Interfaces;
+using ClienteApi.Infrastructure.Messaging.Interfaces;
 
 namespace ClienteApi.Application.UseCases
 {

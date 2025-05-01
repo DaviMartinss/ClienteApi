@@ -1,6 +1,6 @@
 ﻿using System.Data;
 using Npgsql;
-using ClienteApi.Core.Domain.Interfaces;
+using ClienteApi.Infrastructure.Persistence.Interfaces;
 
 namespace ClienteApi.Infrastructure.Persistence.Contexts
 {

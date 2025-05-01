@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace ClienteApi.Core.Domain.Interfaces
+namespace ClienteApi.Infrastructure.Persistence.Interfaces
 {
     public interface IDapperContext
     {

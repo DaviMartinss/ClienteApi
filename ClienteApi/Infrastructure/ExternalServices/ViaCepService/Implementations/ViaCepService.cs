@@ -1,6 +1,6 @@
-﻿using ClienteApi.Application.Interfaces;
+﻿using ClienteApi.Infrastructure.ExternalServices.ViaCepService.Interfaces;
 
-namespace ClienteApi.Infrastructure.ExternalServices.ViaCepService
+namespace ClienteApi.Infrastructure.ExternalServices.ViaCepService.Implementations
 {
     public class ViaCepService : IViaCepService
     {
