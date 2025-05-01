@@ -42,6 +42,9 @@ namespace ClienteApi.Application.UseCases
                     return (false, null, new ApiErrorResponse { ErrorCode = ApiErrorCode.CepNotFound, Message = erro });
 
                 var id = await _repository.CreateAsync(cliente);
+
+                cliente.Id = id;
+
                 _producer.SendMessage(cliente);
 
                 return (true, ClienteMapping.ToResponse(cliente), null);
