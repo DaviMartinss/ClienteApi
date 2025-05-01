@@ -77,3 +77,42 @@ O RabbitMQ está configurado no **Docker**, portanto:
 ![image](https://github.com/user-attachments/assets/154c3649-cd9c-41c7-8e28-db7a28b24c9e)
 
 5. Após logar, vá até a opção **Exchanges** para gerenciar a mensageria.
+
+## Abertura do Swagger
+
+Após executar a API, o **Swagger** será aberto automaticamente em seu navegador, permitindo a visualização e interação com os endpoints da aplicação.
+
+![Swagger](https://github.com/user-attachments/assets/3a6ae5c2-8c11-45b5-b339-7eef152d3937)
+
+## 1º Caso - Cadastro de Cliente
+
+Para realizar o cadastro de um cliente, é necessário informar os seguintes dados obrigatórios:
+
+- **Nome**
+- **Email** (único no banco)
+- **CEP**
+
+![Cadastrar Cliente](https://github.com/user-attachments/assets/fdfa888b-3256-4b03-bc70-eaac94fa7453)
+
+### Retorno da API
+
+Após a requisição, a API retorna uma resposta de **sucesso**, indicando que o cliente foi cadastrado corretamente.
+
+![Retorno da API](https://github.com/user-attachments/assets/0a8c8a4e-9cd9-4b41-86b4-8c03c996fbb9)
+
+### Processamento dos Dados
+
+- Os dados do cliente foram **persistidos** no banco de dados na tabela `clientes`.
+
+![Cliente no Banco](https://github.com/user-attachments/assets/ab8155e2-00af-45ad-871d-43820280751b)
+
+- Uma **mensagem foi publicada no RabbitMQ**, notificando o evento de cadastro.
+
+![Total do MQ](![total do MQ](https://github.com/user-attachments/assets/445dc0ac-2e1b-487e-82dd-19db4557d8da)
+
+![Dado no RabbitMQ](![dado no RabbitMQ](https://github.com/user-attachments/assets/38831087-d409-4724-a485-b02d22bc1746)
+
+
+
+
+
