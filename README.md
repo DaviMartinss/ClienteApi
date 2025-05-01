@@ -62,14 +62,18 @@ dotnet ef migrations remove # Remove uma migration antiga, se necessário
 dotnet ef migrations add NomeDaMigration # Cria uma nova migration
 dotnet ef database update # Aplica as migrations e cria o banco
 ```
+Note que o banco de dados foi criado
+![image](https://github.com/user-attachments/assets/8e283145-748a-4264-9d36-803e7acd3a3f)
 
 ### 3. Inicializar o RabbitMQ
 O RabbitMQ está configurado no **Docker**, portanto:
-
 1. **Abra o Docker Desktop** e inicie o container do RabbitMQ.
-2. Acesse a interface do RabbitMQ pelo navegador:
+![image](https://github.com/user-attachments/assets/c73a584c-d01f-4c90-adbd-06bc2b32ccc9)
+3. Acesse a interface do RabbitMQ pelo navegador:
    - [http://localhost:15672/](http://localhost:15672/)
-3. Faça login com as credenciais padrão:
+4. Faça login com as credenciais padrão:
    - **Username**: `guest`
    - **Password**: `guest`
-4. Após logar, vá até a opção **Exchanges** para gerenciar a mensageria.
+![image](https://github.com/user-attachments/assets/154c3649-cd9c-41c7-8e28-db7a28b24c9e)
+
+5. Após logar, vá até a opção **Exchanges** para gerenciar a mensageria.
