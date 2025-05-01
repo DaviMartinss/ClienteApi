@@ -52,7 +52,7 @@ namespace ClienteApi.SendClientRegisteredEmail.Transaction
                 _logger.LogInformation("RabbitMQ Consumer rodando...");
                 Console.ReadLine();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

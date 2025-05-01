@@ -22,12 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Util\Languages\ClienteApiResponseMsg.Designer.cs">
+    <Compile Update="Core\Util\Languages\ClienteApiResponseMsg.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>ClienteApiResponseMsg.resx</DependentUpon>
     </Compile>
-    <Compile Update="Util\Languages\ClienteMsg.Designer.cs">
+    <Compile Update="Core\Util\Languages\ClienteMsg.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>ClienteMsg.resx</DependentUpon>
@@ -35,11 +35,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Util\Languages\ClienteApiResponseMsg.resx">
+    <EmbeddedResource Update="Core\Util\Languages\ClienteApiResponseMsg.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ClienteApiResponseMsg.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Util\Languages\ClienteMsg.resx">
+    <EmbeddedResource Update="Core\Util\Languages\ClienteMsg.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ClienteMsg.Designer.cs</LastGenOutput>
     </EmbeddedResource>
