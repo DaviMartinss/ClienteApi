@@ -41,3 +41,35 @@ A implementação é composta por:
 ### Microsserviço Worker - Processamento de Eventos
 - Consome mensagens publicadas no **RabbitMQ** após o cadastro de um novo cliente.
 - Processa o evento e simula o envio de um email para um endereço pré-configurado (exemplo: **notificacao@empresa.com**).
+
+## Execução do Projeto
+
+### 1. Configuração do Banco de Dados
+Antes de executar a API, é necessário configurar a conexão com o banco. Para isso:
+
+1. Acesse **WebApi → appsettings.json**.
+2. Informe os dados de conexão:
+   - **Host**: Endereço do banco de dados.
+   - **Database**: Nome do banco de dados.
+   - **Username**: Usuário do banco.
+   - **Password**: Senha de acesso.
+
+### 2. Executar Migrations
+Após configurar o banco, é necessário executar as migrações para preparar o esquema do banco de dados:
+
+```sh
+dotnet ef migrations remove # Remove uma migration antiga, se necessário
+dotnet ef migrations add NomeDaMigration # Cria uma nova migration
+dotnet ef database update # Aplica as migrations e cria o banco
+```
+
+### 3. Inicializar o RabbitMQ
+O RabbitMQ está configurado no **Docker**, portanto:
+
+1. **Abra o Docker Desktop** e inicie o container do RabbitMQ.
+2. Acesse a interface do RabbitMQ pelo navegador:
+   - [http://localhost:15672/](http://localhost:15672/)
+3. Faça login com as credenciais padrão:
+   - **Username**: `guest`
+   - **Password**: `guest`
+4. Após logar, vá até a opção **Exchanges** para gerenciar a mensageria.
