@@ -173,3 +173,7 @@ Por fim, vamos executar o **worker `ClienteApi.SendClientRegisteredEmail`** para
 3. **Verificar que os dados foram consumidos da fila**, confirmando que o processo foi realizado corretamente.
 
 ![Dados consumidos](https://github.com/user-attachments/assets/d981ffde-0649-4a21-a998-8e5a8e0dd9e0)
+
+Simulando envio
+![simulando envio](https://github.com/user-attachments/assets/00a3b4bf-ee64-491c-a51a-85b84e00f07f)
+
