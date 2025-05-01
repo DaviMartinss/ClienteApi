@@ -1,39 +1,34 @@
-﻿using ClienteApi.Data.Repositories;
+﻿using ClienteApi.Controllers;
+using ClienteApi.Data.Contexts.Interfaces;
+using ClienteApi.Data.Repositories.Interfaces;
+using ClienteApi.Enums;
 using ClienteApi.Models;
 using ClienteApi.Models.Responses;
-using ClienteApi.Services;
-using ClienteApi.Controllers;
-using Moq;
-using Xunit;
+using ClienteApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using ClienteApi.Data.Contexts;
-using ClienteApi.Enums;
+using Moq;
 using System.Data;
-using static ClienteApi.Services.ViaCepService;
 
 namespace ClienteApi.Tests.Controllers
 {
     public class ClienteControllerTests
     {
-        private readonly Mock<ClienteRepository> _repositoryMock;
-        private readonly Mock<ViaCepService> _viaCepServiceMock;
-        private readonly Mock<RabbitMQProducer> _producerMock;
-        private readonly Mock<DapperContext> _dapperContextMock;
+        private readonly Mock<IClienteRepository> _repositoryMock;
+        private readonly Mock<IViaCepService> _viaCepServiceMock;
+        private readonly Mock<IRabbitMQProducer> _producerMock;
+        private readonly Mock<IDapperContext> _dapperContextMock;
         private readonly ClienteController _controller;
 
         public ClienteControllerTests()
         {
-            // Mock do DapperContext e método CreateConnection
-            _dapperContextMock = new Mock<DapperContext>();
-            var mockConnection = new Mock<IDbConnection>(); // Mock da conexão
+            var mockConnection = new Mock<IDbConnection>();
+            _dapperContextMock = new Mock<IDapperContext>();
             _dapperContextMock.Setup(c => c.CreateConnection()).Returns(mockConnection.Object);
 
-            // Mock do ClienteRepository, passando o DapperContext mockado como dependência
-            _repositoryMock = new Mock<ClienteRepository>(_dapperContextMock.Object);
-            _viaCepServiceMock = new Mock<ViaCepService>();
-            _producerMock = new Mock<RabbitMQProducer>();
+            _repositoryMock = new Mock<IClienteRepository>();
+            _viaCepServiceMock = new Mock<IViaCepService>();
+            _producerMock = new Mock<IRabbitMQProducer>();
 
-            // Criando o controller com os mocks
             _controller = new ClienteController(
                 _repositoryMock.Object,
                 _viaCepServiceMock.Object,
@@ -62,7 +57,7 @@ namespace ClienteApi.Tests.Controllers
         {
             // Arrange
             var cliente = new Cliente { Email = "novo@email.com", Cep = "00000000" };
-            _repositoryMock.Setup(r => r.GetByEmailAsync(cliente.Email)).ReturnsAsync((Cliente)null!);
+            _repositoryMock.Setup(r => r.GetByEmailAsync(cliente.Email)).ReturnsAsync((Cliente?)null);
             _viaCepServiceMock.Setup(v => v.GetEnderecoAsync(cliente.Cep)).ReturnsAsync((false, null));
 
             // Act
@@ -79,16 +74,15 @@ namespace ClienteApi.Tests.Controllers
         {
             // Arrange
             var cliente = new Cliente { Email = "valido@email.com", Cep = "12345678" };
-            _repositoryMock.Setup(r => r.GetByEmailAsync(cliente.Email)).ReturnsAsync((Cliente)null!);
+            _repositoryMock.Setup(r => r.GetByEmailAsync(cliente.Email)).ReturnsAsync((Cliente?)null);
             _viaCepServiceMock.Setup(v => v.GetEnderecoAsync(cliente.Cep))
-                .ReturnsAsync((true, new ViaCepResponse
+                .ReturnsAsync((true, new ClienteApi.Services.ViaCepService.ViaCepResponse
                 {
                     Logradouro = "Rua Teste",
                     Bairro = "Centro",
                     Localidade = "Cidade",
                     Uf = "UF"
                 }));
-
             _repositoryMock.Setup(r => r.CreateAsync(It.IsAny<Cliente>())).ReturnsAsync(1);
 
             // Act
@@ -105,10 +99,9 @@ namespace ClienteApi.Tests.Controllers
         {
             // Arrange
             var cliente = new Cliente { Id = 1, Nome = "Teste" };
-            var mockRepo = new Mock<ClienteRepository>(_dapperContextMock.Object);
+            var mockRepo = new Mock<IClienteRepository>();
             mockRepo.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(cliente);
-
-            var controller = new ClienteController(mockRepo.Object, null!, null!);
+            var controller = new ClienteController(mockRepo.Object, Mock.Of<IViaCepService>(), Mock.Of<IRabbitMQProducer>());
 
             // Act
             var result = await controller.GetClienteById(1);
@@ -122,10 +115,9 @@ namespace ClienteApi.Tests.Controllers
         public async Task GetClienteById_ClienteNaoExiste_DeveRetornarNotFound()
         {
             // Arrange
-            var mockRepo = new Mock<ClienteRepository>(_dapperContextMock.Object);
+            var mockRepo = new Mock<IClienteRepository>();
             mockRepo.Setup(r => r.GetByIdAsync(1)).ReturnsAsync((Cliente?)null);
-
-            var controller = new ClienteController(mockRepo.Object, null!, null!);
+            var controller = new ClienteController(mockRepo.Object, Mock.Of<IViaCepService>(), Mock.Of<IRabbitMQProducer>());
 
             // Act
             var result = await controller.GetClienteById(1);
@@ -139,14 +131,11 @@ namespace ClienteApi.Tests.Controllers
         {
             // Arrange
             var cliente = new Cliente { Cep = "00000000" };
-
-            var mockRepo = new Mock<ClienteRepository>(_dapperContextMock.Object);
+            var mockRepo = new Mock<IClienteRepository>();
             mockRepo.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(new Cliente());
-
-            var mockViaCep = new Mock<ViaCepService>();
+            var mockViaCep = new Mock<IViaCepService>();
             mockViaCep.Setup(s => s.GetEnderecoAsync(cliente.Cep)).ReturnsAsync((false, null!));
-
-            var controller = new ClienteController(mockRepo.Object, mockViaCep.Object, null!);
+            var controller = new ClienteController(mockRepo.Object, mockViaCep.Object, Mock.Of<IRabbitMQProducer>());
 
             // Act
             var result = await controller.UpdateCliente(1, cliente);
@@ -161,16 +150,60 @@ namespace ClienteApi.Tests.Controllers
         public async Task UpdateCliente_ClienteNaoExiste_DeveRetornarNotFound()
         {
             // Arrange
-            var mockRepo = new Mock<ClienteRepository>(_dapperContextMock.Object);
+            var mockRepo = new Mock<IClienteRepository>();
             mockRepo.Setup(r => r.GetByIdAsync(1)).ReturnsAsync((Cliente?)null);
-
-            var controller = new ClienteController(mockRepo.Object, null!, null!);
+            var controller = new ClienteController(mockRepo.Object, Mock.Of<IViaCepService>(), Mock.Of<IRabbitMQProducer>());
 
             // Act
             var result = await controller.UpdateCliente(1, new Cliente());
 
             // Assert
             Assert.IsType<NotFoundResult>(result);
+        }
+
+        [Fact]
+        public async Task UpdateCliente_Valido_DeveRetornarOkComCliente()
+        {
+            // Arrange
+            var clienteAtualizado = new Cliente
+            {
+                Id = 1,
+                Nome = "Novo Nome",
+                Email = "novo@email.com",
+                Cep = "12345678"
+            };
+
+            var clienteExistente = new Cliente
+            {
+                Id = 1,
+                Nome = "Antigo Nome",
+                Email = "antigo@email.com",
+                Cep = "87654321"
+            };
+
+            var mockRepo = new Mock<IClienteRepository>();
+            mockRepo.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(clienteExistente);
+            mockRepo.Setup(r => r.UpdateAsync(It.IsAny<Cliente>())).Returns(Task.CompletedTask);
+
+            var mockViaCep = new Mock<IViaCepService>();
+            mockViaCep.Setup(v => v.GetEnderecoAsync(clienteAtualizado.Cep)).ReturnsAsync((true, new ClienteApi.Services.ViaCepService.ViaCepResponse
+            {
+                Logradouro = "Rua Atualizada",
+                Bairro = "Centro",
+                Localidade = "Cidade",
+                Uf = "UF"
+            }));
+
+            var controller = new ClienteController(mockRepo.Object, mockViaCep.Object, Mock.Of<IRabbitMQProducer>());
+
+            // Act
+            var result = await controller.UpdateCliente(1, clienteAtualizado);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var clienteRetornado = Assert.IsType<Cliente>(okResult.Value);
+            Assert.Equal("Novo Nome", clienteRetornado.Nome);
+            Assert.Equal("novo@email.com", clienteRetornado.Email);
         }
     }
 }
