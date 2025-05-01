@@ -159,4 +159,17 @@ Se a atualização for bem-sucedida, a API retornará os **dados atualizados do 
 Após a atualização, os **dados do cliente foram modificados no banco de dados**, garantindo que as novas informações foram persistidas corretamente.
 ![dado no banco update](https://github.com/user-attachments/assets/9e5a26ac-2e0b-4c7d-9840-ff13ac0f8d42)
 
+## 4º Caso - Executar o Worker para Consumir Mensagens do RabbitMQ
 
+Por fim, vamos executar o **worker `ClienteApi.SendClientRegisteredEmail`** para consumir os dados que estão armazenados no **RabbitMQ**.
+
+### Passos para executar o Worker:
+
+1. **Setar o projeto** que será executado, conforme a imagem abaixo:
+![set](https://github.com/user-attachments/assets/fcb4b8d4-731f-4719-8edc-1aee78f1dd84) 
+
+2. **Executar o Worker** para iniciar o consumo das mensagens.
+
+3. **Verificar que os dados foram consumidos da fila**, confirmando que o processo foi realizado corretamente.
+
+![Dados consumidos](https://github.com/user-attachments/assets/d981ffde-0649-4a21-a998-8e5a8e0dd9e0)
