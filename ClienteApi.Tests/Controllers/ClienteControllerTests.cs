@@ -9,117 +9,141 @@ namespace ClienteApi.Tests.Controllers
 {
     public class ClienteControllerTests
     {
-        private readonly Mock<IClienteTRA> _clienteTRAMock;
-        private readonly ClienteController _controller;
+        private readonly Mock<IClienteTRA> _clienteTraMock;
+        private readonly ClienteController _clienteController;
 
         public ClienteControllerTests()
         {
-            _clienteTRAMock = new Mock<IClienteTRA>();
-            _controller = new ClienteController(_clienteTRAMock.Object);
+            _clienteTraMock = new Mock<IClienteTRA>();
+            _clienteController = new ClienteController(_clienteTraMock.Object);
         }
 
         [Fact]
         public async Task CreateCliente_EmailDuplicado_DeveRetornarBadRequest()
         {
             // Arrange
-            var request = new ClienteRequest { Email = "teste@email.com", Cep = "12345678" };
-            var error = new ApiErrorResponse { ErrorCode = ApiErrorCode.EmailAlreadyRegistered };
+            var clienteRequest = new ClienteRequest { Email = "teste@email.com", Cep = "12345678" };
+            var erroEsperado = new ApiErrorResponse { ErrorCode = ApiErrorCode.EmailAlreadyRegistered };
 
-            _clienteTRAMock.Setup(t => t.CreateClienteAsync(request)).ReturnsAsync((false, null, error));
+            _clienteTraMock
+                .Setup(servico => servico.CreateClienteAsync(clienteRequest))
+                .ReturnsAsync((false, null, erroEsperado));
 
             // Act
-            var result = await _controller.CreateCliente(request);
+            var resultado = await _clienteController.CreateCliente(clienteRequest);
 
             // Assert
-            var badRequest = Assert.IsType<BadRequestObjectResult>(result);
-            var response = Assert.IsType<ApiErrorResponse>(badRequest.Value);
-            Assert.Equal(ApiErrorCode.EmailAlreadyRegistered, response.ErrorCode);
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(resultado);
+            var erroRetornado = Assert.IsType<ApiErrorResponse>(badRequestResult.Value);
+            Assert.Equal(ApiErrorCode.EmailAlreadyRegistered, erroRetornado.ErrorCode);
         }
 
         [Fact]
         public async Task CreateCliente_Valido_DeveRetornarCreated()
         {
             // Arrange
-            var request = new ClienteRequest { Email = "valido@email.com", Cep = "12345678" };
-            var response = new ClienteResponse { Id = 1, Email = request.Email };
+            var clienteRequest = new ClienteRequest { Email = "valido@email.com", Cep = "12345678" };
+            var clienteResponse = new ClienteResponse { Id = 1, Email = clienteRequest.Email };
 
-            _clienteTRAMock.Setup(t => t.CreateClienteAsync(request)).ReturnsAsync((true, response, null));
+            _clienteTraMock
+                .Setup(servico => servico.CreateClienteAsync(clienteRequest))
+                .ReturnsAsync((true, clienteResponse, null));
 
             // Act
-            var result = await _controller.CreateCliente(request);
+            var resultado = await _clienteController.CreateCliente(clienteRequest);
 
             // Assert
-            var created = Assert.IsType<CreatedAtActionResult>(result);
-            var cliente = Assert.IsType<ClienteResponse>(created.Value);
-            Assert.Equal(1, cliente.Id);
+            var createdResult = Assert.IsType<CreatedAtActionResult>(resultado);
+            var clienteCriado = Assert.IsType<ClienteResponse>(createdResult.Value);
+            Assert.Equal(1, clienteCriado.Id);
         }
 
         [Fact]
         public async Task GetClienteById_ClienteExiste_DeveRetornarOkComCliente()
         {
             // Arrange
-            var response = new ClienteResponse { Id = 1, Nome = "Teste" };
-            _clienteTRAMock.Setup(t => t.GetClienteByIdAsync(1)).ReturnsAsync((true, response, null));
+            var clienteResponse = new ClienteResponse { Id = 1, Nome = "Teste" };
+
+            _clienteTraMock
+                .Setup(servico => servico.GetClienteByIdAsync(1))
+                .ReturnsAsync((true, clienteResponse, null));
 
             // Act
-            var result = await _controller.GetClienteById(1);
+            var resultado = await _clienteController.GetClienteById(1);
 
             // Assert
-            var ok = Assert.IsType<OkObjectResult>(result);
-            var cliente = Assert.IsType<ClienteResponse>(ok.Value);
-            Assert.Equal(1, cliente.Id);
+            var okResult = Assert.IsType<OkObjectResult>(resultado);
+            var clienteRetornado = Assert.IsType<ClienteResponse>(okResult.Value);
+            Assert.Equal(1, clienteRetornado.Id);
         }
 
         [Fact]
         public async Task GetClienteById_ClienteNaoExiste_DeveRetornarNotFound()
         {
             // Arrange
-            var error = new ApiErrorResponse { ErrorCode = ApiErrorCode.ClientNotFound };
-            _clienteTRAMock.Setup(t => t.GetClienteByIdAsync(1)).ReturnsAsync((false, null, error));
+            var erroEsperado = new ApiErrorResponse { ErrorCode = ApiErrorCode.ClientNotFound };
+
+            _clienteTraMock
+                .Setup(servico => servico.GetClienteByIdAsync(1))
+                .ReturnsAsync((false, null, erroEsperado));
 
             // Act
-            var result = await _controller.GetClienteById(1);
+            var resultado = await _clienteController.GetClienteById(1);
 
             // Assert
-            var notFound = Assert.IsType<NotFoundObjectResult>(result);
-            var response = Assert.IsType<ApiErrorResponse>(notFound.Value);
-            Assert.Equal(ApiErrorCode.ClientNotFound, response.ErrorCode);
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(resultado);
+            var erroRetornado = Assert.IsType<ApiErrorResponse>(notFoundResult.Value);
+            Assert.Equal(ApiErrorCode.ClientNotFound, erroRetornado.ErrorCode);
         }
 
         [Fact]
         public async Task UpdateCliente_ClienteNaoExiste_DeveRetornarNotFound()
         {
             // Arrange
-            var request = new ClienteRequest { Nome = "Novo", Email = "novo@email.com", Cep = "12345678" };
-            var error = new ApiErrorResponse { ErrorCode = ApiErrorCode.ClientNotFound };
+            var clienteRequest = new ClienteRequest { Nome = "Novo", Email = "novo@email.com", Cep = "12345678" };
+            var erroEsperado = new ApiErrorResponse { ErrorCode = ApiErrorCode.ClientNotFound };
 
-            _clienteTRAMock.Setup(t => t.UpdateClienteAsync(1, request)).ReturnsAsync((false, null, error));
+            _clienteTraMock
+                .Setup(servico => servico.UpdateClienteAsync(1, clienteRequest))
+                .ReturnsAsync((false, null, erroEsperado));
 
             // Act
-            var result = await _controller.UpdateCliente(1, request);
+            var resultado = await _clienteController.UpdateCliente(1, clienteRequest);
 
             // Assert
-            var notFound = Assert.IsType<NotFoundObjectResult>(result);
-            var response = Assert.IsType<ApiErrorResponse>(notFound.Value);
-            Assert.Equal(ApiErrorCode.ClientNotFound, response.ErrorCode);
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(resultado);
+            var erroRetornado = Assert.IsType<ApiErrorResponse>(notFoundResult.Value);
+            Assert.Equal(ApiErrorCode.ClientNotFound, erroRetornado.ErrorCode);
         }
 
         [Fact]
         public async Task UpdateCliente_Valido_DeveRetornarOkComCliente()
         {
             // Arrange
-            var request = new ClienteRequest { Nome = "Atualizado", Email = "atualizado@email.com", Cep = "87654321" };
-            var response = new ClienteResponse { Id = 1, Nome = request.Nome, Email = request.Email };
+            var clienteRequest = new ClienteRequest
+            {
+                Nome = "Atualizado",
+                Email = "atualizado@email.com",
+                Cep = "87654321"
+            };
+            var clienteAtualizado = new ClienteResponse
+            {
+                Id = 1,
+                Nome = clienteRequest.Nome,
+                Email = clienteRequest.Email
+            };
 
-            _clienteTRAMock.Setup(t => t.UpdateClienteAsync(1, request)).ReturnsAsync((true, response, null));
+            _clienteTraMock
+                .Setup(servico => servico.UpdateClienteAsync(1, clienteRequest))
+                .ReturnsAsync((true, clienteAtualizado, null));
 
             // Act
-            var result = await _controller.UpdateCliente(1, request);
+            var resultado = await _clienteController.UpdateCliente(1, clienteRequest);
 
             // Assert
-            var ok = Assert.IsType<OkObjectResult>(result);
-            var cliente = Assert.IsType<ClienteResponse>(ok.Value);
-            Assert.Equal(request.Email, cliente.Email);
+            var okResult = Assert.IsType<OkObjectResult>(resultado);
+            var clienteRetornado = Assert.IsType<ClienteResponse>(okResult.Value);
+            Assert.Equal(clienteRequest.Email, clienteRetornado.Email);
         }
     }
 }
