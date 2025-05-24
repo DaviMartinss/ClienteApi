@@ -9,5 +9,4 @@ namespace ClienteApi.Core.Domain.Interfaces
         Task<int> CreateAsync(Cliente cliente);
         Task UpdateAsync(Cliente cliente);
     }
-
 }
