@@ -1,4 +1,4 @@
-# Microsserviço de Cadastro de Clientes
+# Api de Cadastro de Clientes
 
 ## Objetivo
 
